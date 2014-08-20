@@ -1,0 +1,146 @@
+HOME                           =$ENV::HOME
+RANDFILE                       =$ENV::HOME/.rnd
+
+[ ca ]
+default_ca                     =CA_default
+
+[ CA_default ]
+
+dir                            =$ENV::ROOT
+certs                          =$dir
+crl_dir                        =$dir
+database                       =$dir/index.txt
+new_certs_dir                  =$dir
+certificate                    =$dir/ca.crt
+serial                         =$dir/serial
+crl                            =$dir/crl.pem
+private_key                    =$dir/ca.key
+RANDFILE                       =$dir/.rand
+x509_extensions                =usr_cert
+name_opt                       =ca_default
+cert_opt                       =ca_default
+default_days                   =3650
+default_crl_days               =3650
+default_md                     =default
+preserve                       =no
+policy                         =policy_match
+
+[ policy_match ]
+countryName                    =match
+stateOrProvinceName            =match
+organizationName               =match
+organizationalUnitName         =optional
+commonName                     =supplied
+emailAddress                   =optional
+
+[ policy_anything ]
+countryName                    =optional
+stateOrProvinceName            =optional
+localityName                   =optional
+organizationName               =optional
+organizationalUnitName         =optional
+commonName                     =supplied
+emailAddress                   =optional
+
+[ req ]
+default_bits                   =2048
+default_keyfile                =privkey.pem
+distinguished_name             =req_distinguished_name
+attributes                     =req_attributes
+x509_extensions                =v3_ca
+req_extensions                 =v3_req
+#input_password                 =secret
+#output_password                =secret
+string_mask                    =utf8only
+
+[ req_distinguished_name ]
+countryName                    =Country Name (2 letter code)
+countryName_min                =2
+countryName_max                =2
+stateOrProvinceName            =State or Province Name (full name)
+localityName                   =Locality Name (eg, city)
+0.organizationName             =Organization Name (eg, company)
+organizationalUnitName         =Organizational Unit Name (eg, section)
+commonName                     =Common Name (e.g. server FQDN or YOUR name)
+commonName_max                 =64
+unique_subject                 =no
+emailAddress                   =Email Address
+emailAddress_max               =64
+
+# defaults
+countryName_default            =$ENV::COUNTRY
+stateOrProvinceName_default    =$ENV::STATE
+0.organizationName_default     =$ENV::ORG
+organizationalUnitName_default =$ENV::UNIT
+localityName_default           =$ENV::CITY
+commonName_default             =*
+emailAddress                   =$ENV::EMAIL
+
+[ req_attributes ]
+challengePassword              =A challenge password
+challengePassword_min          =4
+challengePassword_max          =20
+unstructuredName               =An optional company name
+
+[ usr_cert ]
+basicConstraints               =CA:FALSE
+nsComment                      ="OpenSSL Generated Certificate"
+subjectKeyIdentifier           =hash
+authorityKeyIdentifier         =keyid,issuer:always
+extendedKeyUsage               =clientAuth
+keyUsage                       =digitalSignature
+subjectAltName                 =email:copy
+issuerAltName                  =issuer:copy
+
+[ server ]
+basicConstraints               =CA:FALSE
+nsCertType                     =server
+nsComment                      ="OpenSSL Generated Server Certificate"
+subjectKeyIdentifier           =hash
+authorityKeyIdentifier         =keyid,issuer:always
+extendedKeyUsage               =serverAuth
+keyUsage                       =digitalSignature, keyEncipherment
+subjectAltName                 =@alt_names
+
+[ v3_req ]
+basicConstraints               =CA:FALSE
+keyUsage                       =nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName                 =@alt_names
+
+[ alt_names ]
+# ALT_NAMES
+
+[ v3_ca ]
+subjectKeyIdentifier           =hash
+authorityKeyIdentifier         =keyid:always,issuer
+basicConstraints               =CA:true
+
+[ crl_ext ]
+authorityKeyIdentifier         =keyid:always
+
+[ proxy_cert_ext ]
+basicConstraints               =CA:FALSE
+nsComment                      ="OpenSSL Generated Certificate"
+subjectKeyIdentifier           =hash
+authorityKeyIdentifier         =keyid,issuer
+proxyCertInfo                  =critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo
+
+[ tsa ]
+default_tsa                    =tsa_config1
+
+[ tsa_config1 ]
+dir                            =$ENV::ROOT
+serial                         =$dir/tsaserial
+crypto_device                  =builtin
+signer_cert                    =$dir/tsacert.pem
+certs                          =$dir/ca.crt
+signer_key                     =$dir/private/tsakey.pem
+
+default_policy                 =tsa_policy1
+other_policies                 =tsa_policy2, tsa_policy3
+digests                        =md5, sha1
+accuracy                       =secs:1, millisecs:500, microsecs:100
+clock_precision_digits         =0
+ordering                       =yes
+tsa_name                       =yes
+ess_cert_id_chain              =no
