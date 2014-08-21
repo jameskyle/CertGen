@@ -32,6 +32,9 @@ UNIT=${UNIT:-Foundry}
 EMAIL=${EMAIL:-jk328n@att.com}
 
 SUBJECT_AlT_TYPE=DNS  # Other option is IP
+CONFIG_TEMPLATE=${CONFIG_TEMPLATE:-./templates/openssl.cnf.template}
+CONFIG=${CONFIG:-/tmp/openssl.cnf}
+
 if [[ ! -z $ALT_NAMES ]];then
     old_ifs=$IFS
     IFS=',' read -a ALT_NAMES <<< "$ALT_NAMES"
@@ -56,9 +59,6 @@ export EMAIL
 export UNIT
 export ROOT
 export CITY
-
-CONFIG_TEMPLATE=${CONFIG_TEMPLATE:-./templates/openssl.cnf.template}
-CONFIG=${CONFIG:-/tmp/openssl.cnf}
 
 cp ${CONFIG_TEMPLATE} ${CONFIG}
 
